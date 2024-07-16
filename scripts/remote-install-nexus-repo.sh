@@ -42,7 +42,7 @@ EOF
 
 # ssh into remote with newly created user to download Java and Gradle 
 ssh $SERVICE_USER@$REMOTE_ADDRESS <<EOF
-echo "$SERVICE_USER_PW" | sudo -S apt-get install -y openjdk-8-jre-headless
+echo "$SERVICE_USER_PW" | sudo -S apt-get install -y openjdk-11-jre-headless 
 which_java=\$(which java)
 installations=\$(java --version)
 
@@ -68,31 +68,47 @@ java_version_num=\$(java -version 2>&1 | grep -i version | head -n 1 | awk -F '"
 #awk -F '.' '{print \$1}': splits the input by dots and prints the first field
 java_major_version=\$( echo \$java_version_num | awk -F '.' '{print \$1}' )
 
-if [ ! -z "\$java_major_version" ] && [ "\$java_major_version" -eq 8 ]
+if [ ! -z "\$java_major_version" ] && [ "\$java_major_version" -eq 11 ]
   then
     installation_successful=true
     echo "Java Installation Successful."
     echo "java major version: \$java_major_version"
   else
     installation_successful=false
-    echo "Installation error. Java Major Version installed is not Version 8."
+    echo "Installation error. Java Major Version installed is not Version 11."
 fi
 
 EOF
 
-
 # pull, extract and change permissions of sonatype nexus
 ssh $ROOT_USER@$REMOTE_ADDRESS <<EOF
 cd /opt
-wget https://download.sonatype.com/nexus/3/nexus-3.70.1-02-java8-unix.tar.gz
-tar -xvzf nexus-3.70.1-02-java8-unix.tar.gz
-chown -R $SERVICE_USER:$SERVICE_USER nexus-3.70.1-02
-chown -R $SERVICE_USER:$SERVICE_USER sonatype-work
+if [ ! -f nexus-3.70.1-02-java11-unix.tar.gz ]
+then
+  echo "Downloading nexus repo archive"  
+  wget https://download.sonatype.com/nexus/3/nexus-3.70.1-02-java11-unix.tar.gz 
+else
+  echo "Nexus Repo Archive found. Download skipped"
+fi
 
+if [ ! -d nexus-3.70.1-02 ]
+then
+  echo "Extracting Nexux Repo Archive"
+  tar -xvzf nexus-3.70.1-02-java11-unix.tar.gz  
+else 
+  echo "Nexus Repo Directory found. Extraction skipped"
+fi
+
+chown -R $SERVICE_USER:$SERVICE_USER nexus-3.70.1-02 
+chown -R $SERVICE_USER:$SERVICE_USER sonatype-work
 EOF
 
+# Start nexus server
 ssh $SERVICE_USER@$REMOTE_ADDRESS <<EOF
 /opt/nexus-3.70.1-02/bin/nexus start
+
+# wait for startup
+sleep 5
 
 # log running NEXUS process
 echo "
@@ -106,6 +122,7 @@ to shutdown the NEXUS server run 'kill PID'"
 # log whatever is running on port 8081 
 echo "
 PORT 8081 IS RUNNING:"
-netstat -ltnp | grep 8081 
+echo "$SERVICE_USER_PW" | sudo -S netstat -ltnp | grep :8081 
 
 EOF
+
