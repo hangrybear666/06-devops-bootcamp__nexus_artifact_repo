@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # load key value pairs from java.config
-source ./config/remote.properties
+source ../config/remote.properties
 
 PUBLIC_KEY=$(cat $HOME/.ssh/id_rsa.pub)
 
