@@ -2,6 +2,8 @@
 
 # load key value pairs from config file
 source "../config/local.properties"
+source "../config/remote.properties"
+
 
 if [ -z "$( which node )" ]
 then
@@ -21,5 +23,6 @@ then
   exit 1
 fi
 
-ls
-
+# asks for input of username and password
+npm login --registry http://$REMOTE_ADDRESS:8081/repository/npm-hosted/ 
+npm publish --registry http://$REMOTE_ADDRESS:8081/repository/npm-hosted/
