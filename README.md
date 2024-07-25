@@ -34,7 +34,7 @@ Pull the repository locally by running
         NEXUS_USER_2_PWD=
 ```
 
-5. Ensure Java, gradle, maven, node and npm are installed on your local machine.
+5. Ensure Java 17, gradle 7.4, maven, node and npm are installed on your local machine.
 
 	Make sure to check https://docs.gradle.org/current/userguide/compatibility.html for the correct version compatibility between gradle and java. I can recommend using SDKMAN! to install different versions of gradle, maven and jdk on linux. https://sdkman.io/install. 
 
@@ -93,8 +93,42 @@ repoUser = xxxxxxx
 repoPassword = xxxxxxx
 ```
 
-Then execute the script `./build-and-publish-gradle.sh` 
+	Then execute
+```
+	gradle clean build
+	gradle publish
+```
 
+9. Publish a maven java application to maven-hosted repository.
+
+	Navigate to `java-maven-app` in your GIT_DIRECTORY and replace the `distributionManagement` the line in `pom.xml` to match your repo url:
+
+```
+    <distributionManagement>
+        <repository>
+	    <name>Maven Hosted</name>
+            <id>nexus</id>
+            <url>http://xxx.xxx.xx.xx:8081/repository/maven-hosted/</url>
+        </repository>
+    </distributionManagement>
+
+```
+	Execute `mvn package` then navigate to your user's home directory where a hidden .m2 folder should have been created after executing the package command. In the .m2 folder create a file called `settings.xml` and add (with your password):
+
+```
+<settings>
+  <servers>
+    <server>
+      <id>nexus</id>
+      <username>team-2</username>
+      <password>xxxxxxxxxxxxx</password>
+    </server>
+  </servers>
+</settings>
+
+``` 
+
+	Then execute `mvn deploy`
 ## Usage (Demo Projects)
 
 1. The exercises already cover nexus hosting, gradle and maven publishing and no further demonstration is required.
