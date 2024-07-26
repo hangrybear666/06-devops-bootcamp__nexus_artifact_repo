@@ -89,6 +89,9 @@ else
   echo "Error downloading and unpacking node archive."
 fi
 
+# sleep so server can startup
+sleep 3
+
 # log running node process
 echo "
 RUNNING NODE PROCESS:"
