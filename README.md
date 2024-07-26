@@ -56,11 +56,17 @@ For node and npm installed in the local user account only, I can recommend Node 
 4. Login to nexus at IP address defined in config/remote.properties and port 8081
 	
 	a. Change the default admin user password.
-	b. Create new blob store for team 1 and new blob store for team 2
-        c. Create new users for team-1 and team-2
-	d. Create new npm-hosted repository for team 1 and maven-hosted repository for team 2
-	e. Create new nexus-npm-hosted role with `nx-repository-admin-npm-npm-hosted-*` and `nx-repository-view-npm-npm-hosted-*` privilege and assign to team-1 user
-        f. Create new nexus-maven-hosted role with `nx-repository-admin-maven2-maven-hosted-*` and `nx-repository-view-maven2-maven-hosted-*` privilege and assign to team-2 user
+
+	b. Create new blob store for team 1 and new blob store for team 2.
+
+	c. Create new users for team-1 and team-2.
+
+	d. Create new npm-hosted repository for team 1 and maven-hosted repository for team 2.
+
+	e. Create new nexus-npm-hosted role with `nx-repository-admin-npm-npm-hosted-*` and `nx-repository-view-npm-npm-hosted-*` privilege and assign to team-1 user.
+
+	f. Create new nexus-maven-hosted role with `nx-repository-admin-maven2-maven-hosted-*` and `nx-repository-view-maven2-maven-hosted-*` privilege and assign to team-2 user.
+
 	g. In Nexus, navigate to Realms and add `npm Bearer Token Realm` as active.
 
 5.  Clone npm, gradle and maven git repositories to your local git folder.
@@ -133,7 +139,9 @@ For node and npm installed in the local user account only, I can recommend Node 
 10. Download and run a node deployable on a new remote server via Nexus REST API access.
 
 	a. Create a new Nexus user `npm-runner` and assign the created npm-hosted role from step 4e.
+
 	b. Create a new VPS Server at your cloud provider, ensure `jq` and `netstat` is installed and run `./automate-npm-remote-deployment.sh`
+
 	c. To kill the running server check the logs from step 3 for its Process ID (PID) and run kill <PID> on the remote.
 
 ## Usage (Demo Projects)
