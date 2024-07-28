@@ -1,9 +1,12 @@
 # Hosting Sonatype Nexus Repository on Remote Linux VPS
 
-This repo......
+This repo contains a collection of config files and shell scripts to remotely deploy a nexus repo, upload and fetch deployment artifacts for java and node apps and running those apps on another remote VPS.
 
-The main deployment is:
+The main deployments are:
 - A Nexus Repository running with JDK 11 on DigitalOcean's Linux VPS Environment.
+- A java application built with gradle and its artifact being hosted on nexus.
+- A java application built with maven and its artifact being hosted on nexus.
+- A node application built with npm and its artifact being hosted on nexus.
 
 ## Setup
 
